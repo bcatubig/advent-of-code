@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
         }
     }
 
+    free(buf);
     fclose(in_file);
     return EXIT_SUCCESS;
 }
