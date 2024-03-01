@@ -151,6 +151,7 @@ int read_line_value(const char *line)
 	}
 
 	list_destroy(nums);
+	free(nums);
 
 	return result;
 }
