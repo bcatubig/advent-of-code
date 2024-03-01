@@ -19,10 +19,14 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup and run tests
+      - name: CMake Setup
         working-directory: ${{github.workspace}}/${{matrix.dir}}
-        run: |
-          cmake -B ${{github.workspace}}/${{matrix.dir}}/build -D TARGET_GROUP=test
-          cmake --build ${{github.workspace}}/${{matrix.dir}}/build
-          cd build
-          ctest
+        run: cmake -B ${{github.workspace}}/${{matrix.dir}}/build
+
+      - name: CMake Build
+        working-directory: ${{github.workspace}}/${{matrix.dir}}
+        run: cmake --build ${{github.workspace}}/${{matrix.dir}}/build
+
+      - name: Run CTest
+        working-directory: ${{github.workspace}}/${{matrix.dir}}/build
+        run: ctest --output-on-failure
