@@ -1,12 +1,11 @@
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
 #include "day_1.h"
 
 void list_init(struct List *list)
 {
-	memset(list, 0, sizeof(struct List));
 	list->size = 0;
 	list->head = NULL;
 	list->tail = NULL;
@@ -54,6 +53,17 @@ int list_ins_next(struct List *list, struct ListElement *element, int data)
 	return 0;
 }
 
+int list_ins_tail(struct List *list, int data)
+{
+	int rc = list_ins_next(list, list->tail, data);
+
+	if (rc != 0) {
+		return -1;
+	}
+
+	return 0;
+}
+
 int list_rem_next(struct List *list, struct ListElement *element)
 {
 	struct ListElement *old_element;
@@ -90,27 +100,59 @@ int list_rem_next(struct List *list, struct ListElement *element)
 
 int read_calibration_value(FILE *f)
 {
-	// thing
-	return 0;
+	int result = 0;
+
+	// For line in file, read each line value, add to result
+
+	return result;
 }
 
-int read_line_value(char *line, size_t line_length)
+int read_line_value(const char *line)
 {
 	struct List *nums;
 
-	nums = (struct List *)(sizeof(struct List));
+	nums = (struct List *)malloc(sizeof(struct List));
 
 	if (nums == NULL) {
 		return -1;
 	}
 
-	for (int i = 0; i < line_length - 1; i++) {
-		if isdigit (line[i]) {
-			// add to list
-			int rv;
+	list_init(nums);
+
+	size_t length = strlen(line);
+	for (int i = 0; i < length; i++) {
+		if (isdigit(line[i])) {
+			int num = atoi(&line[i]);
+			if ((list_ins_tail(nums, num)) != 0) {
+				fprintf(stderr,
+					"failed to add %d to end of list\n",
+					num);
+				continue;
+			}
 		}
-		printf("%c - isNum: %d\n", line[i], isdigit(line[i]) != 0);
 	}
 
-	return 0;
+	int result = 0;
+
+	if (list_size(nums) == 1) {
+		char buf[2];
+		int num = nums->head->data;
+
+		buf[0] = num + '0';
+		buf[1] = num + '0';
+
+		result = atoi(buf);
+
+	} else {
+		char buf[2];
+
+		buf[0] = nums->head->data + '0';
+		buf[1] = nums->tail->data + '0';
+
+		result = atoi(buf);
+	}
+
+	list_destroy(nums);
+
+	return result;
 }
