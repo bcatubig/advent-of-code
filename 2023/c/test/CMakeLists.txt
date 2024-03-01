@@ -1,1 +1,1 @@
-add_subdirectory(suite_day_1)
+add_subdirectory(day_1)
