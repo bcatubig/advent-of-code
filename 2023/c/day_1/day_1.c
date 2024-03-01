@@ -55,13 +55,7 @@ int list_ins_next(struct List *list, struct ListElement *element, int data)
 
 int list_ins_tail(struct List *list, int data)
 {
-	int rc = list_ins_next(list, list->tail, data);
-
-	if (rc != 0) {
-		return -1;
-	}
-
-	return 0;
+	return list_ins_next(list, list->tail, data);
 }
 
 int list_rem_next(struct List *list, struct ListElement *element)
