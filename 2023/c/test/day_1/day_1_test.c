@@ -1,4 +1,5 @@
 #include "unity_internals.h"
+#include <stdio.h>
 #include <unity.h>
 #include <day_1.h>
 
@@ -14,6 +15,7 @@ void test_read_line_value_single_digit(void)
 {
 	char *line = "treb7uchet";
 
+	printf("in da test\n");
 	int got = read_line_value(line);
 	TEST_ASSERT_EQUAL(77, got);
 }
