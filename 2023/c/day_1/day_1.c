@@ -132,6 +132,10 @@ int read_line_value(const char *line)
 		}
 	}
 
+	if (list_size(nums) == 0) {
+		return 0;
+	}
+
 	int result = 0;
 
 	if (list_size(nums) == 1) {

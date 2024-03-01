@@ -42,6 +42,14 @@ void test_read_line_multiple_digits(void)
 	TEST_ASSERT_EQUAL(15, got);
 }
 
+void test_read_line_no_digits(void)
+{
+	char *line = "helloworld";
+
+	int got = read_line_value(line);
+	TEST_ASSERT_EQUAL(0, got);
+}
+
 int main(void)
 {
 	UNITY_BEGIN();
@@ -50,6 +58,7 @@ int main(void)
 	RUN_TEST(test_read_line_first_last_digit);
 	RUN_TEST(test_read_line_middle_digits);
 	RUN_TEST(test_read_line_multiple_digits);
+	RUN_TEST(test_read_line_no_digits);
 
 	return UNITY_END();
 }
