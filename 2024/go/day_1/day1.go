@@ -2,15 +2,15 @@ package day1
 
 import (
 	"bufio"
+	"io"
 	"log"
 	"math"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
 )
 
-func Solution(in *os.File) int {
+func Solution(in io.Reader) int {
 	var leftList []int
 	var rightList []int
 
