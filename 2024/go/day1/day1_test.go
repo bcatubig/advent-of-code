@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	day1 "github.com/bcatubig/advent-of-code/2024/go/day_1"
+	"github.com/bcatubig/advent-of-code/2024/go/day1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
