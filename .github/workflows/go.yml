@@ -26,7 +26,6 @@ jobs:
     if: ${{ fromJson(needs.generate-matrix.outputs.matrix-go).include[0] }}
     steps:
       - uses: actions/checkout@v4
-      - run: ls -lha && pwd
       - uses: actions/setup-go@v5
         with:
           go-version: "stable"
