@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSolution(t *testing.T) {
+func TestPart1(t *testing.T) {
 
 	t.Run("example", func(t *testing.T) {
 
@@ -18,18 +18,44 @@ func TestSolution(t *testing.T) {
 		defer testFile.Close()
 
 		want := 11
-		got := day1.Solution(testFile)
+		got, err := day1.Part1(testFile)
+		require.Nil(t, err)
 		assert.Equal(t, want, got)
 	})
 
-	t.Run("input", func(t *testing.T) {
+	t.Run("part1", func(t *testing.T) {
 
 		testFile, err := os.Open("../../inputs/day1")
 		require.Nil(t, err)
 		defer testFile.Close()
 
 		want := 1873376
-		got := day1.Solution(testFile)
+		got, err := day1.Part1(testFile)
+		require.Nil(t, err)
+		assert.Equal(t, want, got)
+	})
+}
+
+func TestPart2(t *testing.T) {
+	t.Run("example", func(t *testing.T) {
+		testFile, err := os.Open("./testdata/input")
+		require.Nil(t, err)
+		defer testFile.Close()
+
+		want := 31
+		got, err := day1.Part2(testFile)
+		require.Nil(t, err)
+		assert.Equal(t, want, got)
+	})
+
+	t.Run("part2", func(t *testing.T) {
+		testFile, err := os.Open("../../inputs/day1")
+		require.Nil(t, err)
+		defer testFile.Close()
+
+		want := 18997088
+		got, err := day1.Part2(testFile)
+		require.Nil(t, err)
 		assert.Equal(t, want, got)
 	})
 }

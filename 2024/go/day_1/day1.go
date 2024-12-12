@@ -2,6 +2,7 @@ package day1
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"log"
 	"math"
@@ -10,7 +11,18 @@ import (
 	"strings"
 )
 
-func Solution(in io.Reader) int {
+type BuildListsResult struct {
+	Len   int
+	Left  []int
+	Right []int
+}
+
+func BuildLists(in io.Reader) (*BuildListsResult, error) {
+	result := &BuildListsResult{
+		Left:  make([]int, 0),
+		Right: make([]int, 0),
+	}
+
 	var leftList []int
 	var rightList []int
 
@@ -18,7 +30,7 @@ func Solution(in io.Reader) int {
 	for scanner.Scan() {
 		split := strings.Fields(scanner.Text())
 		if len(split) != 2 {
-			log.Fatalf("expected 2 ints: got: %v", split)
+			return nil, fmt.Errorf("expected 2 ints: got: %v", split)
 		}
 		left, _ := strconv.Atoi(split[0])
 		right, _ := strconv.Atoi(split[1])
@@ -31,13 +43,57 @@ func Solution(in io.Reader) int {
 		log.Fatal(err)
 	}
 
+	if len(leftList) != len(rightList) {
+		return nil, fmt.Errorf("lists are not equal in size: %v != %v", len(leftList), len(rightList))
+	}
+
 	sort.Ints(leftList)
 	sort.Ints(rightList)
 
-	var result int
-	for i := 0; i < len(leftList); i++ {
-		result += int(math.Abs(float64(leftList[i] - rightList[i])))
+	result.Left = leftList
+	result.Right = rightList
+	result.Len = len(leftList)
+
+	return result, nil
+}
+
+func Part1(in io.Reader) (int, error) {
+
+	lists, err := BuildLists(in)
+
+	if err != nil {
+		return 0, err
 	}
 
-	return result
+	var result int
+	for i := 0; i < lists.Len; i++ {
+		result += int(math.Abs(float64(lists.Left[i] - lists.Right[i])))
+	}
+
+	return result, nil
+}
+
+func Part2(in io.Reader) (int, error) {
+	numRight := make(map[int]int)
+
+	lists, err := BuildLists(in)
+
+	if err != nil {
+		return 0, err
+	}
+
+	for _, val := range lists.Right {
+		numRight[val]++
+	}
+
+	var result int
+	for _, val := range lists.Left {
+		if count, ok := numRight[val]; !ok {
+			continue
+		} else {
+			result += (val * count)
+		}
+	}
+
+	return result, nil
 }
