@@ -55,44 +55,37 @@ type reportResult struct {
 	badIdx int
 }
 
-func isReportSafe(r []int) bool {
-	shouldIncrease := false
+func isReportSafe(r []int) *reportResult {
+	result := &reportResult{}
 
-	if r[0] < r[1] {
-		shouldIncrease = true
-	}
+	left, right := 0, 1
 
-	for p1, p2 := 0, 1; p2 < len(r); p1, p2 = p1+1, p2+1 {
-		val1 := r[p1]
-		val2 := r[p2]
+	isIncreasing := r[left] < r[right]
 
-		if val1 == val2 {
-			return false
+	for right < len(r) {
+		if r[left] == r[right] {
+			return result
 		}
 
-		if shouldIncrease {
-			if val2 < val1 {
-				return false
-			}
-
-			diff := val2 - val1
-
-			if diff > 3 {
-				return false
+		if isIncreasing {
+			diff := r[right] - r[left]
+			if diff > 3 || diff < 0 {
+				return result
 			}
 		} else {
-			if val2 > val1 {
-				return false
-			}
-
-			diff := val1 - val2
-			if diff > 3 {
-				return false
+			diff := r[left] - r[right]
+			if diff > 3 || diff < 0 {
+				return result
 			}
 		}
+
+		left++
+		right++
 	}
 
-	return true
+	result.safe = true
+
+	return result
 }
 
 func day2Part1(r io.Reader) (int, error) {
@@ -105,32 +98,16 @@ func day2Part1(r io.Reader) (int, error) {
 	}
 
 	for _, report := range reports {
-		if isReportSafe(report) {
+		res := isReportSafe(report)
+		if res.safe {
 			safeReports++
+			continue
 		}
 	}
 
 	return safeReports, nil
 }
 
-// func day2Part2(r io.Reader) (int, error) {
-// 	var safeReports int
-
-// 	reports, err := buildReports(r)
-
-// 	if err != nil {
-// 		return 0, err
-// 	}
-
-// 	for _, report := range reports {
-// 		res := isReportSafe(report)
-// 		if res.safe {
-// 			safeReports++
-// 			continue
-// 		}
-
-// 		// If still not safe, the report can be considered unsafe
-// 	}
-
-// 	return safeReports, nil
-// }
+func day2Part2(r io.Reader) (int, error) {
+	return 0, nil
+}

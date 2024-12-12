@@ -28,6 +28,39 @@ func TestBuildReports(t *testing.T) {
 	})
 }
 
+func TestIsReportSafe(t *testing.T) {
+	t.Run("case 1", func(t *testing.T) {
+		got := isReportSafe([]int{7, 6, 4, 2, 1})
+		assert.True(t, got.safe)
+	})
+
+	t.Run("case 2", func(t *testing.T) {
+		got := isReportSafe([]int{1, 2, 7, 8, 9})
+		assert.False(t, got.safe)
+	})
+
+	t.Run("case 3", func(t *testing.T) {
+		got := isReportSafe([]int{9, 7, 6, 2, 1})
+		assert.False(t, got.safe)
+	})
+
+	t.Run("case 4", func(t *testing.T) {
+		got := isReportSafe([]int{1, 3, 2, 4, 5})
+		assert.False(t, got.safe)
+	})
+
+	t.Run("case 5", func(t *testing.T) {
+		got := isReportSafe([]int{8, 6, 4, 4, 1})
+		assert.False(t, got.safe)
+	})
+
+	t.Run("case 6", func(t *testing.T) {
+		got := isReportSafe([]int{1, 3, 6, 7, 9})
+		assert.True(t, got.safe)
+	})
+
+}
+
 func TestDay2Part1(t *testing.T) {
 	t.Run("example", func(t *testing.T) {
 		fData, err := os.Open("./testdata/input")
