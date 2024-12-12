@@ -51,3 +51,27 @@ func TestDay2Part1(t *testing.T) {
 		assert.Equal(t, 686, got)
 	})
 }
+
+// func TestDay2Part2(t *testing.T) {
+// 	t.Run("example", func(t *testing.T) {
+// 		fData, err := os.Open("./testdata/input")
+// 		require.Nil(t, err)
+// 		defer fData.Close()
+
+// 		got, err := day2Part2(fData)
+// 		require.Nil(t, err)
+
+// 		assert.Equal(t, 4, got)
+// 	})
+
+// 	t.Run("input", func(t *testing.T) {
+// 		fData, err := os.Open("../../inputs/day2")
+// 		require.Nil(t, err)
+// 		defer fData.Close()
+
+// 		got, err := day2Part2(fData)
+// 		require.Nil(t, err)
+
+// 		assert.Equal(t, 686, got)
+// 	})
+// }
