@@ -50,42 +50,80 @@ func removeItemFromSlice(in []int, targetIdx int) []int {
 	return result
 }
 
-type reportResult struct {
-	safe   bool
-	badIdx int
-}
+func isIncrementing(report []int) bool {
+	incCount := 0
+	decCount := 0
 
-func isReportSafe(r []int) *reportResult {
-	result := &reportResult{}
+	for i, j := 0, 1; j < len(report); i, j = i+1, j+1 {
+		num1 := report[i]
+		num2 := report[j]
 
-	left, right := 0, 1
-
-	isIncreasing := r[left] < r[right]
-
-	for right < len(r) {
-		if r[left] == r[right] {
-			return result
-		}
-
-		if isIncreasing {
-			diff := r[right] - r[left]
-			if diff > 3 || diff < 0 {
-				return result
-			}
+		if num1 < num2 {
+			incCount++
 		} else {
-			diff := r[left] - r[right]
-			if diff > 3 || diff < 0 {
-				return result
-			}
+			decCount++
 		}
-
-		left++
-		right++
 	}
 
-	result.safe = true
+	return incCount > decCount
+}
 
-	return result
+func isReportSafe(report []int) (bool, int) {
+	isIncrementing := isIncrementing(report)
+	for i, j := 0, 1; j < len(report); i, j = i+1, j+1 {
+		num1 := report[i]
+		num2 := report[j]
+
+		if num1 == num2 {
+			return false, i
+		}
+
+		// Check the diffs
+		if isIncrementing {
+			if num2 < num1 {
+				return false, j
+			}
+			diff := num2 - num1
+			if diff > 3 {
+				return false, j
+			}
+		} else {
+			if num2 > num1 {
+				return false, j
+			}
+
+			diff := num1 - num2
+			if diff > 3 {
+				return false, j
+			}
+		}
+	}
+
+	return true, 0
+}
+
+func isReportSafeWithDapener(report []int) bool {
+	isSafe, badIdx := isReportSafe(report)
+
+	if isSafe {
+		return true
+	}
+
+	dampenedReport1 := removeItemFromSlice(report, badIdx)
+	isSafe, _ = isReportSafe(dampenedReport1)
+	if isSafe {
+		return true
+	}
+
+	if badIdx-1 >= 0 {
+		dampenedReport2 := removeItemFromSlice(report, badIdx-1)
+		isSafe, _ = isReportSafe(dampenedReport2)
+		if isSafe {
+			return true
+		}
+	}
+
+	return false
 }
 
 func day2Part1(r io.Reader) (int, error) {
@@ -98,8 +136,8 @@ func day2Part1(r io.Reader) (int, error) {
 	}
 
 	for _, report := range reports {
-		res := isReportSafe(report)
-		if res.safe {
+		safe, _ := isReportSafe(report)
+		if safe {
 			safeReports++
 			continue
 		}
@@ -109,5 +147,19 @@ func day2Part1(r io.Reader) (int, error) {
 }
 
 func day2Part2(r io.Reader) (int, error) {
-	return 0, nil
+	var safeReports int
+
+	reports, err := buildReports(r)
+
+	if err != nil {
+		return 0, err
+	}
+
+	for _, report := range reports {
+		if isReportSafeWithDapener(report) {
+			safeReports++
+		}
+	}
+
+	return safeReports, nil
 }
