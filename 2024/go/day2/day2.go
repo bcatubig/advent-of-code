@@ -3,7 +3,6 @@ package day2
 import (
 	"bufio"
 	"io"
-	"math"
 	"strconv"
 	"strings"
 )
@@ -38,37 +37,93 @@ func buildReports(r io.Reader) ([][]int, error) {
 	return result, nil
 }
 
-func isReportSafe(r []int) bool {
-	shouldIncrease, shouldDecrease := false, false
+func removeItemFromSlice(in []int, targetIdx int) []int {
+	var result []int
 
-	if r[0] < r[1] {
-		shouldIncrease = true
-		shouldDecrease = false
-	} else {
-		shouldDecrease = true
-		shouldIncrease = false
+	for idx, num := range in {
+		if idx == targetIdx {
+			continue
+		}
+		result = append(result, num)
 	}
 
-	for p1, p2 := 0, 1; p2 < len(r); p1, p2 = p1+1, p2+1 {
-		if r[p1] == r[p2] {
-			return false
-		}
+	return result
+}
 
-		if shouldIncrease && r[p2] < r[p1] {
-			return false
-		}
+func isIncrementing(report []int) bool {
+	incCount := 0
+	decCount := 0
 
-		if shouldDecrease && r[p2] > r[p1] {
-			return false
-		}
+	for i, j := 0, 1; j < len(report); i, j = i+1, j+1 {
+		num1 := report[i]
+		num2 := report[j]
 
-		diff := int(math.Abs(float64(r[p1] - r[p2])))
-		if diff > 3 {
-			return false
+		if num1 < num2 {
+			incCount++
+		} else {
+			decCount++
 		}
 	}
 
-	return true
+	return incCount > decCount
+}
+
+func isReportSafe(report []int) (bool, int) {
+	isIncrementing := isIncrementing(report)
+	for i, j := 0, 1; j < len(report); i, j = i+1, j+1 {
+		num1 := report[i]
+		num2 := report[j]
+
+		if num1 == num2 {
+			return false, i
+		}
+
+		// Check the diffs
+		if isIncrementing {
+			if num2 < num1 {
+				return false, j
+			}
+			diff := num2 - num1
+			if diff > 3 {
+				return false, j
+			}
+		} else {
+			if num2 > num1 {
+				return false, j
+			}
+
+			diff := num1 - num2
+			if diff > 3 {
+				return false, j
+			}
+		}
+	}
+
+	return true, 0
+}
+
+func isReportSafeWithDapener(report []int) bool {
+	isSafe, badIdx := isReportSafe(report)
+
+	if isSafe {
+		return true
+	}
+
+	dampenedReport1 := removeItemFromSlice(report, badIdx)
+	isSafe, _ = isReportSafe(dampenedReport1)
+	if isSafe {
+		return true
+	}
+
+	if badIdx-1 >= 0 {
+		dampenedReport2 := removeItemFromSlice(report, badIdx-1)
+		isSafe, _ = isReportSafe(dampenedReport2)
+		if isSafe {
+			return true
+		}
+	}
+
+	return false
 }
 
 func day2Part1(r io.Reader) (int, error) {
@@ -81,7 +136,27 @@ func day2Part1(r io.Reader) (int, error) {
 	}
 
 	for _, report := range reports {
-		if isReportSafe(report) {
+		safe, _ := isReportSafe(report)
+		if safe {
+			safeReports++
+			continue
+		}
+	}
+
+	return safeReports, nil
+}
+
+func day2Part2(r io.Reader) (int, error) {
+	var safeReports int
+
+	reports, err := buildReports(r)
+
+	if err != nil {
+		return 0, err
+	}
+
+	for _, report := range reports {
+		if isReportSafeWithDapener(report) {
 			safeReports++
 		}
 	}
