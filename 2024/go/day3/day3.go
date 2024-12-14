@@ -2,6 +2,7 @@ package day3
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"regexp"
 	"strconv"
@@ -39,6 +40,36 @@ func parseMuls(in io.Reader) ([][]int, error) {
 	}
 
 	return result, nil
+}
+
+func parseMuls2(in io.Reader) ([][]int, error) {
+	scanner := bufio.NewScanner(in)
+	for scanner.Scan() {
+		line := scanner.Text()
+		lineLen := len(line)
+
+		for i := 0; i < lineLen; i++ {
+			ch := string(line[i])
+			switch ch {
+			case "m":
+				// Peek ahead 3
+				if i+3 < lineLen {
+					if line[i:i+3] == "mul" {
+						i += 3
+						fmt.Println("We got a mul, boys")
+					}
+				}
+			case "(":
+				fmt.Println("left brace")
+			case ")":
+				fmt.Println("right brace")
+			case ",":
+				fmt.Println("comma")
+			}
+		}
+	}
+
+	return nil, nil
 }
 
 func calculateMulSum(in [][]int) int {

@@ -50,3 +50,17 @@ func TestCalculateMulSum(t *testing.T) {
 		assert.Equal(t, 188116424, got)
 	})
 }
+
+func TestParseMuls2(t *testing.T) {
+	t.Run("example", func(t *testing.T) {
+
+		data, err := os.Open("./testdata/input")
+		require.Nil(t, err)
+		defer data.Close()
+
+		got, err := parseMuls2(data)
+		require.Nil(t, err)
+
+		t.Log(got)
+	})
+}
