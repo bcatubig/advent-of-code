@@ -1,0 +1,28 @@
+name: Build advent-of-code C solutions
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "**/c/**"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        dir: ["2023/c"]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup and run tests
+        working-directory: ${{github.workspace}}/${{matrix.dir}}
+        run: |
+          cmake -B ${{github.workspace}}/${{matrix.dir}}/build -D TARGET_GROUP=test
+          cmake --build ${{github.workspace}}/${{matrix.dir}}/build
+          cd build
+          ctest
